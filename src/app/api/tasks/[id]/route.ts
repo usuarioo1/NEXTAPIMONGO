@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 interface Params {
 
-    params: string
+    params: String
     id:Number
 }
 
@@ -14,6 +14,9 @@ export function GET(request:Request,{params}:Params ){
 }
 
 export function DELETE(request: Request, params:Params){
-    return
+    return NextResponse.json(`eliminando tarea numero  ${params.id}`)
 }
 
+export function PUT(request: Request, params:Params){
+    return NextResponse.json(`actualizando tarea ${params.id}`)
+}

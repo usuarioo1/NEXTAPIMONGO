@@ -23,13 +23,13 @@ export async function GET(request: Request, { params }: Params) {
 export async function DELETE(request: Request, params: Params) {
     try {
         const deleteTask = await Task.findByIdAndDelete(params.id)
-        if(!deleteTask)
-            return NextResponse.json({message:"tarea no encontrada"}, {status:404})
-            return NextResponse.json(deleteTask);
+        if (!deleteTask)
+            return NextResponse.json({ message: "tarea no encontrada" }, { status: 404 })
+        return NextResponse.json(deleteTask);
     } catch (error) {
-        return NextResponse.json(Error, {status:400})
+        return NextResponse.json(Error, { status: 400 })
     }
-  
+
 }
 
 export async function PUT(request: Request, params: Params) {
@@ -40,8 +40,8 @@ export async function PUT(request: Request, params: Params) {
         });
         return NextResponse.json(taskUpdate);
     } catch (error) {
-        NextResponse.json(Error,{
-            status:400
+        NextResponse.json(Error, {
+            status: 400
         })
-     }
+    }
 }

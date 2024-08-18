@@ -4,9 +4,10 @@ import Task from "@/models/task";
 import Error from "next/error";
 
 interface Params {
-    params: String;
-    id: Number;
+    id: string,
+    params: String
 }
+
 
 export async function GET(request: Request, { params }: Params) {
     try {

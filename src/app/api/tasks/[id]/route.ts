@@ -1,48 +1,47 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/utils/mongoose";
 import Task from "@/models/task";
-import Error from "next/error";
 
 interface Params {
-    id: string,
-    params: String
+    params: {
+        id: string;
+    }
 }
-
 
 export async function GET(request: Request, { params }: Params) {
     try {
-        connectDB();
+        await connectDB();
         const task = await Task.findById(params.id);
-        if (!task) return NextResponse.json({ message: "tarea no encontrada" });
-        // console.log(params)
+        if (!task) return NextResponse.json({ message: "Task not found" }, { status: 404 });
         return NextResponse.json(task);
     } catch (error) {
-        return NextResponse.json(Error, { status: 400 });
+        return NextResponse.json({ error: "Something went wrong" }, { status: 400 });
     }
 }
 
-export async function DELETE(request: Request, params: Params) {
+export async function DELETE(request: Request, { params }: Params) {
     try {
-        const deleteTask = await Task.findByIdAndDelete(params.id)
+        await connectDB();
+        const deleteTask = await Task.findByIdAndDelete(params.id);
         if (!deleteTask)
-            return NextResponse.json({ message: "tarea no encontrada" }, { status: 404 })
+            return NextResponse.json({ message: "Task not found" }, { status: 404 });
         return NextResponse.json(deleteTask);
     } catch (error) {
-        return NextResponse.json(Error, { status: 400 })
+        return NextResponse.json({ error: "Something went wrong" }, { status: 400 });
     }
-
 }
 
-export async function PUT(request: Request, params: Params) {
+export async function PUT(request: Request, { params }: Params) {
     try {
+        await connectDB();
         const data = await request.json();
         const taskUpdate = await Task.findByIdAndUpdate(params.id, data, {
             new: true,
         });
+        if (!taskUpdate)
+            return NextResponse.json({ message: "Task not found" }, { status: 404 });
         return NextResponse.json(taskUpdate);
     } catch (error) {
-        NextResponse.json(Error, {
-            status: 400
-        })
+        return NextResponse.json({ error: "Something went wrong" }, { status: 400 });
     }
 }

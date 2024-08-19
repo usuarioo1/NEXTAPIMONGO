@@ -12,7 +12,6 @@ function FormPage() {
   const router = useRouter();
   const params = useParams();
 
-
   const getTask = async () => {
     try {
       const res = await fetch(`/api/tasks/${params.id}`);
@@ -30,27 +29,23 @@ function FormPage() {
     }
   };
   
-
-
-
   const createTask = async () => {
-
     try {
       const res = await fetch('/api/tasks', {
-        method: "POST", body: JSON.stringify(newTask),
+        method: "POST",
+        body: JSON.stringify(newTask),
         headers: { 'Content-Type': 'application/json' }
       })
-      const data = await res.json()
-      console.log(data)
+      const data = await res.json();
+      console.log(data);
 
       if (res.status === 200) {
-        router.push('/')
-        router.refresh()
+        router.push('/');
+        router.refresh();
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
   }
 
   const handleSubmit = async (e: FormEvent) => {
@@ -58,50 +53,52 @@ function FormPage() {
     if (!params.id) {
       await createTask();
     } else {
-      updateTask();
+      await updateTask();
     }
-
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // console.log(e.target.value)
-    setNewTask({ ...newTask, [e.target.name]: e.target.value })
-
+    setNewTask({ ...newTask, [e.target.name]: e.target.value });
   }
 
   const handleDelete = async () => {
-
     if (window.confirm('Quieres eliminar la tarea?')) {
-      const res = await fetch(`/api/tasks/${params.id}`, {
+      await fetch(`/api/tasks/${params.id}`, {
         method: 'DELETE',
-      })
-      router.push('/')
-      router.refresh()
+      });
+      router.push('/');
+      router.refresh();
     }
-
   }
 
-  const updateTask = async() => {
+  const updateTask = async () => {
+    try {
+      const res = await fetch(`/api/tasks/${params.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(newTask),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await res.json();
+      console.log(data);
 
-    const res = await fetch(`/api/tasks/${params.id}`, {
-      method:'PUT',
-      body: JSON.stringify(newTask)
-    })
-
-    const data = await res.json()
-    router.push('/');
-    router.refresh();
-
+      if (res.status === 200) {
+        router.push('/');
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Failed to update task:", error);
+    }
   }
 
   useEffect(() => {
     if (params.id) {
       getTask();
     }
-  }, [])
+  }, [params.id]);
+
   return (
     <div className='h-[calc(100vh-7rem)] flex justify-center items-center'>
-      <form action="" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <header className="flex justify-between">
           <h1 className="font-bold text-3xl">{!params.id ? 'Crear tarea' : 'Actualizar Tarea'}</h1>
           <button type="button" className="bg-red-500 px-3 py-1 rounded-md" onClick={handleDelete}>Eliminar</button>

@@ -5,7 +5,7 @@ const conn = {
     isConnected: false
 };
 
-const uri = process.env.MONGODB
+const uri = process.env.MONGODB_URI
 
 export async function connectDB() {
     try {

@@ -3,7 +3,7 @@ import Task from "@/models/task";
 import TaskCard from "@/components/TaskCard";
 
 async function loadTask() {
-  connectDB()
+  await connectDB()
   const tasks = await Task.find()
   return tasks;
 }

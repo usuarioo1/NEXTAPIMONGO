@@ -9,7 +9,7 @@ async function loadTask() {
 }
 
 const getTask= async() => {
-  const res = await fetch('https://nextapimongo.vercel.app/api/tasks')
+  const res = await fetch('https://nextapimongo.vercel.app/api/tasks', {cache:'no-store'})
   const data = await res.json()
   console.log(data)
 }
@@ -17,6 +17,7 @@ const getTask= async() => {
 async function HomePage() {
   const tasks = await loadTask()
   getTask()
+  
   return (
     <div className="grid grid-cols-3 gap-2">
     {tasks.map(task =>(
